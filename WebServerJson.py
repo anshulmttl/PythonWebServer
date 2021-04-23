@@ -1,4 +1,4 @@
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import cgi
 import json
 class helloHandler(BaseHTTPRequestHandler):
@@ -15,16 +15,16 @@ class helloHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('content-type','application/json')
         self.end_headers()
-        self.wfile.write(json.dumps({'hello': 'world', 'recieved': 'ok'}))
+        self.wfile.write(json.dumps({'hello': 'world', 'recieved': 'ok'}).encode())
 
     def do_POST(self):
-        length = int(self.headers.getheader('content-length'))
+        length = int(self.headers['Content-Length'])
         message = json.loads(self.rfile.read(length))
 
         message['recieved'] = 'ok'
         print (message)
-        self._set_headers()
-        self.wfile.write(json.dumps({'hello': 'world', 'recieved': 'ok'}))
+        #self._set_headers()
+        self.wfile.write(json.dumps({'hello': 'world', 'recieved': 'ok'}).encode())
         #self.content = json.dumps(message)
 
 def main():
